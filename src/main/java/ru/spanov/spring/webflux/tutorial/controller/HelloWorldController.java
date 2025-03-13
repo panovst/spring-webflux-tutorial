@@ -3,15 +3,19 @@ package ru.spanov.spring.webflux.tutorial.controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import reactor.core.publisher.Mono;
 
 @RestController
-@RequestMapping("/hello-world")
+@RequestMapping("/tutorial")
 public class HelloWorldController {
 
-  @GetMapping
-  public Mono<String> sayHello() {
-    return Mono.just("Hello World!");
+  @GetMapping("/hello")
+  public String sayHello() {
+    return "Hello World!";
+  }
+
+  @GetMapping("/thread-info")
+  public String threadInfo() {
+    return Thread.currentThread().toString();
   }
 
 }

@@ -1,5 +1,7 @@
 package ru.spanov.spring.webflux.tutorial.controller;
 
+import static java.time.Duration.ofMillis;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -11,7 +13,7 @@ public class HelloWorldController {
 
   @GetMapping
   public Mono<String> sayHello() {
-    return Mono.just("Hello World!");
+    return Mono.just("Hello World!").delayElement(ofMillis(500));
   }
 
 }

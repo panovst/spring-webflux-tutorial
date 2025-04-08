@@ -14,7 +14,10 @@ public class SumCalculationController {
 
   @GetMapping("/sum")
   public Mono<Integer> sum(@RequestParam int a, @RequestParam int b) {
-    return Mono.just(a + b).delayElement(ofMillis(500));
+    return Mono.just(a + b)
+//        .delayElement(ofMillis(500))
+//        .log()
+        ;
   }
 
 }

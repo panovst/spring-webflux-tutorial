@@ -2,19 +2,23 @@ package ru.spanov.spring.webflux.tutorial.controller;
 
 import static java.time.Duration.ofMillis;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
-import reactor.netty.http.client.HttpClient;
 
 @RestController
 @RequestMapping("/tutorial")
 public class HelloWorldController {
 
-  private final WebClient webClient = WebClient.create("http://localhost:8080");
+  private final WebClient localhostWebClient = WebClient.builder()
+      .baseUrl("http://localhost:8080")
+      .build();
+
+  private final WebClient ossWebClient = WebClient.builder()
+      .baseUrl("https://oisia-dev-marfak-a-stage.apps.lmru.tech")
+      .build();
 
   @GetMapping("/hello-world")
   public Mono<String> sayHello() {
@@ -23,19 +27,22 @@ public class HelloWorldController {
 
   @GetMapping("/call-sum")
   public Mono<String> callSum() {
-    return webClient
+//    return Mono.just(String.valueOf(1 + 2)).delayElement(ofMillis(500));
+    return localhostWebClient
         .get()
         .uri("/calculation/sum?a=1&b=2")
-        .exchangeToMono(response -> {
-          if (response.statusCode().equals(HttpStatus.OK)) {
-            return response.bodyToMono(String.class);
-          } else if (response.statusCode().is4xxClientError()) {
-            return Mono.just("Error response");
-          } else {
-            return response.createException()
-                .flatMap(Mono::error);
-          }
-        });
+        .retrieve()
+        .bodyToMono(String.class);
+  }
+
+  @GetMapping("/call-oss")
+  public Mono<String> callOss() {
+//    return Mono.just(String.valueOf(1 + 2)).delayElement(ofMillis(500));
+    return ossWebClient
+        .get()
+        .uri("/actuator/health")
+        .retrieve()
+        .bodyToMono(String.class);
   }
 
 }

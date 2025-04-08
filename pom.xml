@@ -3,7 +3,10 @@
     <groupId>ru.spanov</groupId>
     <artifactId>spring-webflux-tutorial</artifactId>
     <version>1.0.0-SNAPSHOT</version>
-    <packaging>jar</packaging>
+    <packaging>pom</packaging>
+    <modules>
+        <module>spring-webflux-tutoarial-app</module>
+    </modules>
     <properties>
         <!--Нужно для IDE чтобы bytecode level не сбрасывался в дефолтный при maven reimport-->
         <maven.compiler.release>21</maven.compiler.release>

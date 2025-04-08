@@ -1,4 +1,4 @@
-package ru.spanov.spring.webflux.tutorial.controller;
+package ru.spanov.spring.webflux.tutorial.app.controller;
 
 import static java.time.Duration.ofMillis;
 

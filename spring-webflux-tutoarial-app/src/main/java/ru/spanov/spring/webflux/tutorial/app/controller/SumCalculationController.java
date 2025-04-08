@@ -1,6 +1,4 @@
-package ru.spanov.spring.webflux.tutorial.controller;
-
-import static java.time.Duration.ofMillis;
+package ru.spanov.spring.webflux.tutorial.app.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

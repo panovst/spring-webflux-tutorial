@@ -13,7 +13,7 @@ import reactor.core.publisher.Mono;
 public class HelloWorldController {
 
   private final WebClient localhostWebClient = WebClient.builder()
-      .baseUrl("http://localhost:8080")
+      .baseUrl("http://localhost:8201")
       .build();
 
   private final WebClient ossWebClient = WebClient.builder()
@@ -22,7 +22,9 @@ public class HelloWorldController {
 
   @GetMapping("/hello-world")
   public Mono<String> sayHello() {
-    return Mono.just("Hello World!").delayElement(ofMillis(500));
+    return Mono.just("Hello World!")
+//        .delayElement(ofMillis(500))
+        ;
   }
 
   @GetMapping("/call-sum")

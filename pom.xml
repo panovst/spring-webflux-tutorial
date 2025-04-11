@@ -6,6 +6,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>spring-webflux-tutoarial-app</module>
+        <module>spring-webflux-tutorial-downstream</module>
     </modules>
     <properties>
         <!--Нужно для IDE чтобы bytecode level не сбрасывался в дефолтный при maven reimport-->

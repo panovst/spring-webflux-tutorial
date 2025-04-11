@@ -1,1 +1,1 @@
-spring.threads.virtual.enabled: false
+spring.threads.virtual.enabled: true

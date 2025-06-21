@@ -37,6 +37,21 @@ public class HelloWorldController {
         .bodyToMono(String.class);
   }
 
+  @GetMapping("/call-sum2")
+  public Mono<String> callSumV2() {
+    var sum1 = localhostWebClient
+        .get()
+        .uri("/calculation/sum?a=1&b=2")
+        .retrieve()
+        .bodyToMono(String.class);
+    var sum2 = localhostWebClient
+        .get()
+        .uri("/calculation/sum?a=1&b=2")
+        .retrieve()
+        .bodyToMono(String.class);
+    return Mono.zip(sum1, sum2, (s1, s2) -> s1 + " " + s2);
+  }
+
   @GetMapping("/call-oss")
   public Mono<String> callOss() {
 //    return Mono.just(String.valueOf(1 + 2)).delayElement(ofMillis(500));

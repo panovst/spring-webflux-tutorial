@@ -1,6 +1,7 @@
 package ru.spanov.spring.webflux.tutorial.app.controller;
 
 import java.util.List;
+import java.util.Map;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,6 +13,9 @@ import reactor.core.publisher.Mono;
 @RequestMapping("/tutorial/eligibility")
 public class EligibilityController {
 
+  private final WebClient ossWebClient = WebClient.builder()
+      .baseUrl("https://oss-prep-marfak-a-stage.apps.lmru.tech")
+      .build();
   private final WebClient ormWebClient = WebClient.builder()
       .baseUrl("https://orm-prep-marfak-a-stage.apps.lmru.tech")
       .build();
@@ -21,37 +25,60 @@ public class EligibilityController {
 
   @GetMapping("/byRegion")
   public Mono<String> callSum() {
-//    return Mono.just(String.valueOf(1 + 2)).delayElement(ofMillis(500));
-
-   var lopusRequest = lopusWebClient
+    var request = Map.of(22124025, 47, 11740111, 2);
+    var lopusRequest = lopusWebClient
         .post()
         .uri("/productEligibility/byRegion")
         .contentType(MediaType.APPLICATION_JSON)
-        .bodyValue(List.of(
-            new LopusRequestItem(22124025, 47),
-            new LopusRequestItem(11740111, 2)
-        ))
+        .bodyValue(filterRequestForLopus(request))
+        .retrieve()
+        .bodyToMono(String.class);
+    var ossRequest = ossWebClient
+        .post()
+        .uri("/offer-items-zones-salability:search")
+        .contentType(MediaType.APPLICATION_JSON)
+        .bodyValue(filterRequestForOss(request))
         .retrieve()
         .bodyToMono(String.class);
     var ormRequest = ormWebClient
         .post()
         .uri("/best-offers")
         .contentType(MediaType.APPLICATION_JSON)
-        .bodyValue(List.of(
-            new BestOfferRequestItem(22124025, 47),
-            new BestOfferRequestItem(11740111, 2)
-        ))
+        .bodyValue(filterRequestForOrm(request))
         .retrieve()
         .bodyToMono(String.class);
 
-    return Mono.zip(lopusRequest, ormRequest, (s1, s2) -> "Lopus: " + s1 + "\nORM: " + s2);
+    return Mono.zip(lopusRequest, ossRequest, ormRequest)
+        .map(tuple -> "Lopus: " + tuple.getT1() + "\nOSS: " + tuple.getT2() + "\nORM: " + tuple.getT3());
   }
 
-  private record BestOfferRequestItem (Integer itemId, Integer zoneId) {
+  private List<LopusRequestItem> filterRequestForLopus(Map<Integer, Integer> request) {
+    return request.entrySet().stream()
+        .map(entry -> new LopusRequestItem(entry.getKey(), entry.getValue()))
+        .toList();
+  }
+
+  private List<BestOfferRequestItem> filterRequestForOrm(Map<Integer, Integer> request) {
+    return request.entrySet().stream()
+        .map(entry -> new BestOfferRequestItem(entry.getKey(), entry.getValue()))
+        .toList();
+  }
+
+  private List<SalabilityRequestItem> filterRequestForOss(Map<Integer, Integer> request) {
+    return request.entrySet().stream()
+        .map(entry -> new SalabilityRequestItem(entry.getKey(), entry.getValue()))
+        .toList();
+  }
+
+  private record SalabilityRequestItem(Integer itemId, Integer zoneId) {
 
   }
 
-  private record LopusRequestItem (Integer productId, Integer regionId) {
+  private record BestOfferRequestItem(Integer itemId, Integer zoneId) {
+
+  }
+
+  private record LopusRequestItem(Integer productId, Integer regionId) {
 
   }
 }

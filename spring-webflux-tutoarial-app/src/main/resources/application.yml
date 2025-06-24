@@ -1,3 +1,17 @@
 server:
   port: 8200
   shutdown: graceful
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: prometheus,health
+      base-path: /
+      path-mapping:
+        health: /actuator/health
+        prometheus: /metrics
+  prometheus:
+    metrics:
+      export:
+        enabled: true

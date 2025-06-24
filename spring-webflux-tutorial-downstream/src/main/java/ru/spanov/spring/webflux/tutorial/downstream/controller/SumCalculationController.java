@@ -1,7 +1,5 @@
 package ru.spanov.spring.webflux.tutorial.downstream.controller;
 
-import static java.time.Duration.ofMillis;
-
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -15,7 +13,7 @@ public class SumCalculationController {
   @GetMapping("/sum")
   public Mono<Integer> sum(@RequestParam int a, @RequestParam int b) {
     return Mono.just(a + b)
-        .delayElement(ofMillis(100))
+//        .delayElement(ofMillis(100))
 //        .log()
         ;
   }

@@ -36,7 +36,6 @@
         <dependency>
             <groupId>io.micrometer</groupId>
             <artifactId>micrometer-registry-prometheus</artifactId>
-            <version>1.15.1</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
@@ -49,8 +48,6 @@
             <artifactId>micrometer-tracing</artifactId>
             <version>1.5.1</version>
         </dependency>
-
-
         <!--TEST-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -72,6 +69,17 @@
         -->
 
     </dependencies>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>io.micrometer</groupId>
+                <artifactId>micrometer-bom</artifactId>
+                <version>1.15.1</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
     <build>
         <plugins>
             <plugin>

@@ -11,6 +11,14 @@ management:
       path-mapping:
         health: /actuator/health
         prometheus: /metrics
+  metrics:
+    distribution:
+      percentiles-histogram:
+# In Spring Boot 3.4, specifically with the upgrade of Micrometer from 1.12 to 1.13, a change occurred regarding
+# the inclusion of metric percentiles (quantiles) when histograms are also enabled for the same metric family,
+# particularly in the context of Prometheus.
+        http.server.requests: true
+        http.client.requests: true
   prometheus:
     metrics:
       export:

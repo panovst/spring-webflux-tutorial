@@ -2,6 +2,7 @@ package ru.spanov.spring.webflux.tutorial.app.controller;
 
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import org.springframework.http.MediaType;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,27 +22,34 @@ public class EligibilityController {
       .clientConnector(new ReactorClientHttpConnector(HttpClient.create(ConnectionProvider.builder("oss-pool")
           .metrics(true)
 //          .maxConnectionPools(1)
-//          .maxConnections(700)
+//          По дефолту 32
+          .maxConnections(100)
 //          .pendingAcquireMaxCount(100)
-          .build())))
+          .build())
+          .metrics(true, Function.identity())
+      ))
       .build();
   private final WebClient ormWebClient = WebClient.builder()
       .baseUrl("https://orm-prep-marfak-a-stage.apps.lmru.tech")
       .clientConnector(new ReactorClientHttpConnector(HttpClient.create(ConnectionProvider.builder("orm-pool")
           .metrics(true)
 //          .maxConnectionPools(1)
-//          .maxConnections(700)
+          .maxConnections(100)
 //          .pendingAcquireMaxCount(100)
-          .build())))
+          .build())
+          .metrics(true, Function.identity())
+      ))
       .build();
   private final WebClient lopusWebClient = WebClient.builder()
       .baseUrl("http://10.203.39.196:8090")
       .clientConnector(new ReactorClientHttpConnector(HttpClient.create(ConnectionProvider.builder("lopus-pool")
           .metrics(true)
 //          .maxConnectionPools(1)
-//          .maxConnections(700)
+          .maxConnections(100)
 //          .pendingAcquireMaxCount(100)
-          .build())))
+          .build())
+          .metrics(true, Function.identity())
+      ))
       .build();
 
   @GetMapping("/byRegion")
